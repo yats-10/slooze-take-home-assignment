@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, tap } from "rxjs";
 
 interface LoginResponse {
   access_token: string;
@@ -21,28 +21,29 @@ interface JwtPayload {
   exp: number;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class AuthService {
-  private apiUrl = '/api/auth';
-
+  private apiUrl = "https://slooze-take-home-assignment-production.up.railway.app/auth"; 
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
-      tap((res) => {
-        localStorage.setItem('token', res.access_token);
-        localStorage.setItem('user', JSON.stringify(res.user));
-      }),
-    );
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/login`, { email, password })
+      .pipe(
+        tap((res) => {
+          localStorage.setItem("token", res.access_token);
+          localStorage.setItem("user", JSON.stringify(res.user));
+        }),
+      );
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem("token");
   }
 
   isLoggedIn(): boolean {
@@ -58,21 +59,21 @@ export class AuthService {
 
   getRole(): string {
     const user = this.getUser();
-    return user?.role ?? '';
+    return user?.role ?? "";
   }
 
   getCountry(): string {
     const user = this.getUser();
-    return user?.country ?? '';
+    return user?.country ?? "";
   }
 
   getUserName(): string {
     const user = this.getUser();
-    return user?.name ?? '';
+    return user?.name ?? "";
   }
 
-  private getUser(): LoginResponse['user'] | null {
-    const raw = localStorage.getItem('user');
+  private getUser(): LoginResponse["user"] | null {
+    const raw = localStorage.getItem("user");
     if (!raw) return null;
     try {
       return JSON.parse(raw);
@@ -82,7 +83,7 @@ export class AuthService {
   }
 
   private decodeToken(token: string): JwtPayload {
-    const payload = token.split('.')[1];
+    const payload = token.split(".")[1];
     return JSON.parse(atob(payload));
   }
 }

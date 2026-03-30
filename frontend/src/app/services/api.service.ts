@@ -47,7 +47,7 @@ export interface PaymentMethod {
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private base = '/api';
+  private base = 'https://slooze-take-home-assignment-production.up.railway.app';
 
   constructor(private http: HttpClient) {}
 
